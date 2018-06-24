@@ -2,6 +2,7 @@ import bonobo
 import requests
 from bs4 import BeautifulSoup
 
+# scrape coolblue to know the price of a particular headphone
 def scrape_coolblue():
     price = ''
     status = ''
@@ -15,6 +16,7 @@ def scrape_coolblue():
             price = price_status_section[1].text.strip()
     return price
 
+# scrape bol to know the price of a particular headphone
 def scrape_bol():
     price = ''
     status = ''
@@ -28,15 +30,18 @@ def scrape_bol():
             price = price_section.text.strip()
     return price
 
+# call the scrape functions
 def extract():
     yield scrape_coolblue()
     yield scrape_bol()
 
+# transform the data into the right format 
 def transform(price: str):
     t_price = price.replace(',', '').replace('-', '')
     print(t_price)
     return float(t_price)
 
+# store the data in txt file
 def load(price: float):
     with open('pricing.txt', 'a+', encoding='utf8') as f:
         f.write((str(price) + '\n'))
@@ -47,7 +52,6 @@ if __name__ == '__main__':
         'referrer': 'https://google.com'
     }
 
-    # scrape_redfin()
     graph = bonobo.Graph(
         extract,
         transform,
